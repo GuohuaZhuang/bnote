@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -83,17 +82,16 @@ public class ListActivity extends Activity {
 		return true;
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void showList() {
 		Cursor cursor = mDbManager.query();
-		SimpleCursorAdapter adapter = (SimpleCursorAdapter) mListView.getAdapter();
+		DateSimpleCursorAdapter adapter = (DateSimpleCursorAdapter) mListView.getAdapter();
 		if (null != adapter) {
 			adapter.changeCursor(cursor);
 			adapter.notifyDataSetChanged();
 		} else {
 			String[] from = new String[]{ Note.FIELD_SNAP, Note.FIELD_PUB_DATE };
 			int[] to = new int[]{ R.id.note_list_item, R.id.note_list_item_date };
-			adapter = new SimpleCursorAdapter(this, R.layout.note_list_item, cursor, from, to);
+			adapter = new DateSimpleCursorAdapter(this, R.layout.note_list_item, cursor, from, to);
 			mListView.setAdapter(adapter);
 		}
 	}
