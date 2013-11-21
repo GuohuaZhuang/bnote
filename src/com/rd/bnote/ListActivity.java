@@ -24,6 +24,13 @@ public class ListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		// Remove title bar
+		// this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// Remove notification bar
+		// this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
+		//     WindowManager.LayoutParams.FLAG_FULLSCREEN);
+		
 		setContentView(R.layout.note_list);
 		findViews();
 		mDbManager = new DBManager(this);

@@ -6,7 +6,7 @@
     android:layout_margin="0dp"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ListActivity" >
+    tools:context=".ListActivity">
 
     <ListView
         android:id="@+id/list_note"

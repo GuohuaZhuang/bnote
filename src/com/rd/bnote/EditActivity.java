@@ -1,5 +1,7 @@
 package com.rd.bnote;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -43,7 +45,12 @@ public class EditActivity extends Activity {
 				String content = cursor.getString(cursor.getColumnIndex(Note.FIELD_CONTENT));
 				mEditText.setText(content);
 				mEditText.setSelection(content.length());
+				Long date = Long.parseLong(cursor.getString(cursor.getColumnIndex(Note.FIELD_PUB_DATE)));
+				setTitle(DateSimpleCursorAdapter.GetDate(date, "yyyy年MM月dd日"));
 			}
+		} else {
+			Date date = new Date();
+			setTitle(DateSimpleCursorAdapter.GetDate(date.getTime(), "yyyy年MM月dd日"));
 		}
 	}
 	
