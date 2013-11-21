@@ -1,8 +1,7 @@
 package com.rd.bnote;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -17,26 +16,27 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-public class ListActivity extends Activity {
+public class SearchableActivity extends Activity {
 
 	private DBManager mDbManager;
 	private ListView mListView;
+	private String query;
 	protected static final int MENU_DELETE = Menu.FIRST;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		// Remove title bar
-		// this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		// Remove notification bar
-		// this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
-		//     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		
-		setContentView(R.layout.note_list);
+		setContentView(R.layout.note_searchable);
 		findViews();
 		mListView.setEmptyView(findViewById(R.id.empty));
 		mDbManager = new DBManager(this);
+		query = null;
+		
+	    // Get the intent, verify the action and get the query
+	    Intent intent = getIntent();
+	    if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+	    	query = intent.getStringExtra(SearchManager.QUERY);
+	    }
 	}
 	
 	public void findViews() {
@@ -44,7 +44,7 @@ public class ListActivity extends Activity {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				Intent intent = new Intent(ListActivity.this, EditActivity.class);
+				Intent intent = new Intent(SearchableActivity.this, EditActivity.class);
 				intent.putExtra(Note.FIELD__ID, (int)id);
 				startActivityForResult(intent, RESULT_FIRST_USER);
 			}
@@ -58,7 +58,7 @@ public class ListActivity extends Activity {
 			}
 		});
 	}
-	
+
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -72,7 +72,7 @@ public class ListActivity extends Activity {
 		}
 		return super.onContextItemSelected(item);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		mDbManager.closeDBManager();
@@ -84,43 +84,12 @@ public class ListActivity extends Activity {
 		showList();
 		super.onResume();
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.list, menu);
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.action_settings:
-			openOptionsDialog();
-			return true;
-		case R.id.action_search:
-			onSearchRequested();
-			return true;
-		default:
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	public void openOptionsDialog() {
-		new AlertDialog.Builder(ListActivity.this)
-			.setTitle(R.string.about_title)
-			.setMessage(R.string.about_msg)
-			.setPositiveButton(R.string.about_ok, new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog, int which) {
-				}
-			})
-			.show();
-	}
-	
+
 	public void showList() {
-		Cursor cursor = mDbManager.query();
+		Cursor cursor = mDbManager.query(query);
+		int count = cursor.getCount();
+		setTitle("共找到 " + count + " 条结果");
+		
 		DateSimpleCursorAdapter adapter = (DateSimpleCursorAdapter) mListView.getAdapter();
 		if (null != adapter) {
 			adapter.changeCursor(cursor);
@@ -132,15 +101,4 @@ public class ListActivity extends Activity {
 			mListView.setAdapter(adapter);
 		}
 	}
-	
-	public void addNote(View view) {
-		Intent intent = new Intent(this, EditActivity.class);
-		startActivityForResult(intent, RESULT_FIRST_USER);
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-	}
-	
 }

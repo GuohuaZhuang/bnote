@@ -45,4 +45,12 @@ public class DBManager {
 		Cursor cursor = mdb.query(DBHelper.DATABASE_TABLE, columns, selection, selectionArgs, null, null, null);
 		return cursor;
 	}
+	public Cursor query(String s) {
+		String orderBy = Note.FIELD_PUB_DATE + " DESC";
+		String selection = Note.FIELD_CONTENT + " LIKE ?";
+		String[] selectionArgs = new String[]{ "%" + s + "%" };
+		String[] columns = new String[]{Note.FIELD__ID, Note.FIELD_PUB_DATE, Note.FIELD_SNAP};
+		Cursor cursor = mdb.query(DBHelper.DATABASE_TABLE, columns , selection, selectionArgs, null, null, orderBy);
+		return cursor;
+	}
 }

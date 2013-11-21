@@ -5,7 +5,7 @@
     android:layout_margin="0dp"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ListActivity">
+    tools:context=".SearchableActivity" >
 
     <ListView
         android:id="@+id/list_note"
@@ -21,13 +21,5 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:text="@string/empty_str" />
-
-    <Button
-        android:id="@+id/button_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_add"
-        android:onClick="addNote"
-        android:text="" />
 
 </LinearLayout>
