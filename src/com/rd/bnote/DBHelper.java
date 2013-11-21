@@ -6,15 +6,15 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBHelper extends SQLiteOpenHelper {
 	
-	private static final String DATABASE_NAME = "note.db";
-	private static final String DATABASE_TABLE = "note";
-	private static final int DATABASE_VERSION = 1;
-	private static final String DATABASE_TABLE_DROP = "DROP TABLE IF EXISTS " + DATABASE_TABLE;
-	private static final String DATABASE_TABLE_CREATE = "CREATE TABLE " + DATABASE_TABLE + "("
-	    + "_id INTEGER PRIMARY KEY,"
+	public static final String DATABASE_NAME = "note.db";
+	public static final String DATABASE_TABLE = "note";
+	public static final int DATABASE_VERSION = 1;
+	public static final String DATABASE_TABLE_DROP = "DROP TABLE IF EXISTS " + DATABASE_TABLE;
+	public static final String DATABASE_TABLE_CREATE = "CREATE TABLE " + DATABASE_TABLE + "("
+	    + "_id INTEGER PRIMARY KEY AUTOINCREMENT,"
 	    + "pub_date INTEGER NOT NULL DEFAULT (strftime('%s','now') * 1000),"
 	    + "snap TEXT NOT NULL DEFAULT '',"
-	    + "content TEXT NOT NULL DEFAULT '',"
+	    + "content TEXT NOT NULL DEFAULT ''"
 	    + ");";
 	
 	public DBHelper(Context context) {
