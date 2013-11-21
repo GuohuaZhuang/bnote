@@ -3,7 +3,6 @@ package com.rd.bnote;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.widget.EditText;
 
@@ -37,7 +36,6 @@ public class EditActivity extends Activity {
 		} else {
 			_id = bundle.getInt(Note.FIELD__ID);
 		}
-		Log.d("BNOTE", "Edit activity get _id = " + _id);
 		if (0 != _id) {
 			mNote = new Note(_id);
 			Cursor cursor = mDbManager.query(mNote);

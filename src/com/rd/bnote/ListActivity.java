@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -36,7 +35,6 @@ public class ListActivity extends Activity {
 		mListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				Log.d("BNOTE", "position = " + position + ", id = " + id);
 				Intent intent = new Intent(ListActivity.this, EditActivity.class);
 				intent.putExtra(Note.FIELD__ID, (int)id);
 				startActivityForResult(intent, RESULT_FIRST_USER);
@@ -93,9 +91,9 @@ public class ListActivity extends Activity {
 			adapter.changeCursor(cursor);
 			adapter.notifyDataSetChanged();
 		} else {
-			String[] from = new String[]{ Note.FIELD_SNAP };
-			int[] to = new int[]{ android.R.id.text1 };
-			adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, cursor, from, to);
+			String[] from = new String[]{ Note.FIELD_SNAP, Note.FIELD_PUB_DATE };
+			int[] to = new int[]{ R.id.note_list_item, R.id.note_list_item_date };
+			adapter = new SimpleCursorAdapter(this, R.layout.note_list_item, cursor, from, to);
 			mListView.setAdapter(adapter);
 		}
 	}
