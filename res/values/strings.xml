@@ -2,13 +2,14 @@
 <resources>
 
     <string name="app_name">Bnote</string>
+    <string name="app_label">Bnote</string>
     <string name="action_settings">关于</string>
+    <string name="action_search">搜索</string>
+    <string name="action_sync">同步</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_edit">EditActivity</string>
-    <string name="app_label">Bnote</string>
-    <string name="search_hint">输入搜索关键字</string>
     <string name="title_activity_searchable">SearchableActivity</string>
-    <string name="action_search">搜索</string>
+    <string name="search_hint">输入搜索关键字</string>
     <string name="about_title">关于Bnote</string>
     <string name="about_msg">Bnote是一个简单的笔记应用</string>
     <string name="about_ok">确认</string>

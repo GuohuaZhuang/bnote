@@ -1,11 +1,18 @@
 package com.rd.bnote;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -22,6 +29,8 @@ public class ListActivity extends Activity {
 	private DBManager mDbManager;
 	private ListView mListView;
 	protected static final int MENU_DELETE = Menu.FIRST;
+	protected static final String TAG = "BNOTE";
+	protected static final int ID = 0x0103;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,10 +110,50 @@ public class ListActivity extends Activity {
 		case R.id.action_search:
 			onSearchRequested();
 			return true;
+		case R.id.action_sync:
+			dataSynchronous();
+			return true;
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	@SuppressLint("NewApi")
+	public void dataSynchronous() {
+		final NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setTicker("Bnote正在同步笔记数据")
+	        .setSmallIcon(R.drawable.ic_launcher)
+	        .setContentTitle("Bnote正在同步笔记数据")
+	        .setContentText("正在同步中……");
+		Intent intent = new Intent(this, ListActivity.class);
+		intent.setAction(Intent.ACTION_MAIN);
+		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		mBuilder.setContentIntent(contentIntent);
+		mNotifyManager.notify(ID, mBuilder.build());
+		
+		new Thread(
+		    new Runnable() {
+		        @Override
+		        public void run() {
+		            int incr;
+		            for (incr = 0; incr <= 100; incr+=20) {
+		            		mBuilder.setContentText("已经同步了 " + (int)(((double)incr / 100.0) * 100) + "% 数据").
+		            			setProgress(100, incr, false);
+		                    mNotifyManager.notify(ID, mBuilder.build());
+	                        try {
+	                            Thread.sleep(2*1000);
+	                        } catch (InterruptedException e) {
+	                            Log.d(TAG, "sleep failure");
+	                        }
+		            }
+		            mBuilder.setContentText("同步完成")
+		                    .setProgress(0,0,false);
+		            mNotifyManager.notify(ID, mBuilder.build());
+		        }
+		    }
+		).start();
 	}
 	
 	public void openOptionsDialog() {
