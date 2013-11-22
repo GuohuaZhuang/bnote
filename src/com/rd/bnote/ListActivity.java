@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -122,9 +121,9 @@ public class ListActivity extends Activity {
 	@SuppressLint("NewApi")
 	public void dataSynchronous() {
 		final NotificationManager mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-		final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setTicker("Bnote正在同步笔记数据")
+		final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this).setTicker("Bnote同步笔记数据")
 	        .setSmallIcon(R.drawable.ic_launcher)
-	        .setContentTitle("Bnote正在同步笔记数据")
+	        .setContentTitle("Bnote同步笔记数据")
 	        .setContentText("正在同步中……");
 		Intent intent = new Intent(this, ListActivity.class);
 		intent.setAction(Intent.ACTION_MAIN);
@@ -139,21 +138,24 @@ public class ListActivity extends Activity {
 		        public void run() {
 		            int incr;
 		            for (incr = 0; incr <= 100; incr+=20) {
-		            		mBuilder.setContentText("已经同步了 " + (int)(((double)incr / 100.0) * 100) + "% 数据").
-		            			setProgress(100, incr, false);
-		                    mNotifyManager.notify(ID, mBuilder.build());
-	                        try {
-	                            Thread.sleep(2*1000);
-	                        } catch (InterruptedException e) {
-	                            Log.d(TAG, "sleep failure");
-	                        }
+	            		mBuilder.setContentText("已经同步了 " + (int)(((double)incr / 100.0) * 100) + "% 数据").setProgress(100, incr, false);
+	                    mNotifyManager.notify(ID, mBuilder.build());
+                        try {
+                            Thread.sleep(2*1000);
+                        } catch (InterruptedException e) {
+                            Log.d(TAG, "sleep failure");
+                        }
 		            }
-		            mBuilder.setContentText("同步完成")
-		                    .setProgress(0,0,false);
+		        	jsonDataSynchronous();
+		            mBuilder.setContentText("同步完成").setProgress(0,0,false);
 		            mNotifyManager.notify(ID, mBuilder.build());
 		        }
 		    }
 		).start();
+	}
+	
+	public void jsonDataSynchronous() {
+//		JSONParser jParser = new JSONParser();
 	}
 	
 	public void openOptionsDialog() {
